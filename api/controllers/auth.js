@@ -1,11 +1,12 @@
 import { db } from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cookieParser from 'cookie-parser';
 
 export const register = (req, res) => {
   //CHECK EXISTING USER
-  const q = "SELECT * FROM users WHERE email = ? OR username = ?";
-
+  const q = "SELECT * FROM user_info WHERE email = ? OR username = ?";
+  console.log("pleae");
   db.query(q, [req.body.email, req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
@@ -14,7 +15,7 @@ export const register = (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
-    const q = "INSERT INTO users(`username`,`email`,`password`) VALUES (?)";
+    const q = "INSERT INTO user_info(`username`,`email`,`password`) VALUES (?)";
     const values = [req.body.username, req.body.email, hash];
 
     db.query(q, [values], (err, data) => {
@@ -26,13 +27,14 @@ export const register = (req, res) => {
 
 export const login = (req, res) => {
   //CHECK USER
-
-  const q = "SELECT * FROM users WHERE username = ?";
-
+  console.log("hi");
+  const q = "SELECT * FROM user_info WHERE username = ?";
+  console.log("hisf");
   db.query(q, [req.body.username], (err, data) => {
+    console.log(req.body.username);
+    console.log(data);
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("User not found!");
-
     //Check password
     const isPasswordCorrect = bcrypt.compareSync(
       req.body.password,
@@ -44,19 +46,28 @@ export const login = (req, res) => {
 
     const token = jwt.sign({ id: data[0].id }, "jwtkey");
     const { password, ...other } = data[0];
+    console.log(token);
+    // Set the access_token cookie using cookie-parser
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None'
+    };
+    res.cookie('access_token', token, cookieOptions);
 
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json(other);
+    res.status(200).json(other);
   });
 };
 
 export const logout = (req, res) => {
-  res.clearCookie("access_token",{
-    sameSite:"none",
-    secure:true
-  }).status(200).json("User has been logged out.")
+  // Clear the access_token cookie using cookie-parser
+  const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    maxAge: 0
+  };
+  res.cookie('access_token', '', cookieOptions);
+  
+  res.status(200).json("User has been logged out.");
 };

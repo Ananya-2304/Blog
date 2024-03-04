@@ -23,7 +23,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(inputs);
       await login(inputs)
+      console.log("fds")
+      console.log(inputs)
       navigate("/");
     } catch (err) {
       setError(err.response.data);
@@ -48,7 +51,10 @@ const Login = () => {
           onChange={handleChange}
         />
         <button onClick={handleSubmit}>Login</button>
-        {err && <p>{err}</p>}
+        {err && <p>{console.log(err.message)}</p>}
+        {/* if (err) {
+          console.log(err.message);
+        } */}
         <span>
           Don't you have an account? <Link to="/register">Register</Link>
         </span>

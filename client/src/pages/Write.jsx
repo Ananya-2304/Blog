@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
@@ -11,15 +10,21 @@ const Write = () => {
   const [title, setTitle] = useState(state?.desc || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const upload = async () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("/upload", formData);
-      return res.data;
+      const response = await fetch("http://localhost:8800/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+      const data = await response.json();
+      return data;
     } catch (err) {
       console.log(err);
     }
@@ -30,21 +35,27 @@ const Write = () => {
     const imgUrl = await upload();
 
     try {
-      state
-        ? await axios.put(`/posts/${state.id}`, {
-            title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
-          })
-        : await axios.post(`/posts/`, {
-            title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
-          navigate("/")
+      const endpoint = state ? `http://localhost:8800/api/posts/${state.id}` : "http://localhost:8800/api/posts/";
+      const method = state ? "PUT" : "POST";
+      const requestBody = {
+        title,
+        desc: value,
+        cat,
+        img: file ? imgUrl : "",
+        date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      };
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error("Failed to publish post");
+      }
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -52,7 +63,7 @@ const Write = () => {
 
   return (
     <div className="add">
-      <div className="content">
+       <div className="content">
         <input
           type="text"
           placeholder="Title"
