@@ -17,11 +17,12 @@ const Single = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/posts/${postId}`);
+        const response = await fetch(`http://localhost:8800/api/posts/${postId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch post data");
         }
         const data = await response.json();
+        console.log(data);
         setPost(data);
       } catch (err) {
         console.log(err);
@@ -32,7 +33,7 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/posts/${postId}`, {
+      const response = await fetch(`http://localhost:8800/api/posts/${postId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -61,7 +62,7 @@ const Single = () => {
             <span>{post.username}</span>
             <p>Posted {moment(post.date).fromNow()}</p>
           </div>
-          {currentUser.username === post.username && (
+          {currentUser && currentUser.username === post.username && (
             <div className="edit">
               <Link to={`/write?edit=${postId}`} state={post}>
                 <img src={Edit} alt="" />
@@ -77,7 +78,8 @@ const Single = () => {
           }}
         ></p>
       </div>
-      <Menu cat={post.cat} />
+      <Menu cat={post.category} postId={postId} />
+
     </div>
   );
 };

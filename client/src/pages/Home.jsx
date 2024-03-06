@@ -1,19 +1,18 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-
-  const cat = useLocation().search
-
+  const cat = useLocation().search;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts${cat}`);
-        setPosts(res.data);
+        const res = await fetch(`http://localhost:8800/api/posts${cat}`);
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await res.json();
+        setPosts(data);
       } catch (err) {
         console.log(err);
       }
@@ -48,10 +47,9 @@ const Home = () => {
   // ];
 
   const getText = (html) =>{
-    const doc = new DOMParser().parseFromString(html, "text/html")
-    return doc.body.textContent
-  }
-
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent;
+  };
 
   return (
     <div className="home">
@@ -66,7 +64,9 @@ const Home = () => {
                 <h1>{post.title}</h1>
               </Link>
               <p>{getText(post.desc)}</p>
-              <button>Read More</button>
+              <Link className="link" to={`/post/${post.id}`}>
+                <button>Read More</button>
+              </Link>
             </div>
           </div>
         ))}
