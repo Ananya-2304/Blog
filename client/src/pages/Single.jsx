@@ -6,7 +6,8 @@ import Menu from "../components/Menu";
 import moment from "moment";
 import { AuthContext } from "../context/authContext";
 import DOMPurify from "dompurify";
-
+import Comments from "../components/Comments.jsx"; 
+import Likes from "../components/Likes.jsx"; 
 const Single = () => {
   const [post, setPost] = useState({});
   const { currentUser } = useContext(AuthContext);
@@ -35,6 +36,7 @@ const Single = () => {
     try {
       const response = await fetch(`http://localhost:8800/api/posts/${postId}`, {
         method: "DELETE",
+        credentials: 'include'
       });
       if (!response.ok) {
         throw new Error("Failed to delete post");
@@ -77,6 +79,8 @@ const Single = () => {
             __html: DOMPurify.sanitize(post.desc),
           }}
         ></p>
+        <Likes postId = {postId} />
+        <Comments postId={postId} />
       </div>
       <Menu cat={post.category} postId={postId} />
 

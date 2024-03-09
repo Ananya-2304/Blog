@@ -54,6 +54,7 @@ const Write = () => {
       if (!response.ok) {
         throw new Error("Failed to publish post");
       }
+      console.log("meow");
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -105,6 +106,7 @@ const Write = () => {
         <div className="item">
           <h1>Category</h1>
           <div className="cat">
+          {state && (
             <input
               type="radio"
               checked={cat === "ART"}
@@ -113,61 +115,106 @@ const Write = () => {
               id="art"
               onChange={(e) => setCat(e.target.value)}
             />
-            <label htmlFor="art">Art</label>
-          </div>
-          <div className="cat">
+          )}
+          {!state && (
             <input
               type="radio"
-              checked={cat === "SCIENCE"}
               name="cat"
-              value="science"
-              id="science"
+              value="art"
+              id="art"
               onChange={(e) => setCat(e.target.value)}
             />
-            <label htmlFor="science">Science</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "TECHNOLOGY"}
-              name="cat"
-              value="technology"
-              id="technology"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="technology">Technology</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "CINEMA"}
-              name="cat"
-              value="cinema"
-              id="cinema"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="cinema">Cinema</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "DESIGN"}
-              name="cat"
-              value="design"
-              id="design"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="design">Design</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "FOOD"}
-              name="cat"
-              value="food"
-              id="food"
-              onChange={(e) => setCat(e.target.value)}
-            />
+          )}
+          <label htmlFor="art">Art</label>
+        </div>
+        <div className="cat">
+          {state && (<input
+            type="radio"
+            checked={cat === "SCIENCE"}
+            name="cat"
+            value="science"
+            id="science"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          {!state && (<input
+            type="radio"
+            name="cat"
+            value="science"
+            id="science"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          <label htmlFor="science">Science</label>
+        </div>
+        <div className="cat">
+          {state && (<input
+            type="radio"
+            checked={cat === "TECHNOLOGY"}
+            name="cat"
+            value="technology"
+            id="technology"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          {!state && (<input
+            type="radio"
+            name="cat"
+            value="technology"
+            id="technology"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          <label htmlFor="technology">Technology</label>
+        </div>
+        <div className="cat">
+          {state && (<input
+            type="radio"
+            checked={cat === "CINEMA"}
+            name="cat"
+            value="cinema"
+            id="cinema"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          {!state && (<input
+            type="radio"
+            name="cat"
+            value="cinema"
+            id="cinema"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          <label htmlFor="cinema">Cinema</label>
+        </div>
+        <div className="cat">
+          {state && (<input
+            type="radio"
+            checked={cat === "DESIGN"}
+            name="cat"
+            value="design"
+            id="design"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          {!state && (<input
+            type="radio"
+            name="cat"
+            value="design"
+            id="design"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          <label htmlFor="design">Design</label>
+        </div>
+        <div className="cat">
+          {state && (<input
+            type="radio"
+            checked={cat === "FOOD"}
+            name="cat"
+            value="food"
+            id="food"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
+          {!state && (<input
+            type="radio"
+            name="cat"
+            value="food"
+            id="food"
+            onChange={(e) => setCat(e.target.value)}
+          />)}
             <label htmlFor="food">Food</label>
           </div>
         </div>

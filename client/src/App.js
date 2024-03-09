@@ -4,6 +4,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Write from "./pages/Write";
@@ -12,6 +13,7 @@ import Single from "./pages/Single";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./style.scss"
+const queryClient = new QueryClient();
 
 const Layout = () => {
   return (
@@ -54,12 +56,15 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="app">
-      <div className="container">
-        <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <div className="app">
+        <div className="container">
+          <RouterProvider router={router} />
+        </div>
       </div>
-    </div>
+    </QueryClientProvider>
   );
 }
+
 
 export default App;

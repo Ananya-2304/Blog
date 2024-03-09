@@ -90,7 +90,13 @@ export const addPost = (req, res) => {
 
 
 export const deletePost = (req, res) => {
-  const token = req.cookies.access_token;
+  const cookieHeader = req.headers.cookie;
+  const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+    const [name, value] = cookie.split("=");
+    acc[name] = value;
+    return acc;
+  }, {});
+  const token = cookies.access_token;
   if (!token) return res.status(401).json("Not authenticated!");
 
   jwt.verify(token, "jwtkey", (err, userInfo) => {
@@ -100,6 +106,7 @@ export const deletePost = (req, res) => {
     const q = "DELETE FROM posts WHERE id = ? AND user_id = ?";
 
     db.query(q, [postId, userInfo.id], (err, result) => {
+      console.log(postId + userInfo.id);
       if (err) return res.status(500).json(err);
 
       if (result.affectedRows === 0) {
