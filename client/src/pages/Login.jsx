@@ -33,31 +33,29 @@ const Login = () => {
   };
   return (
     <div className="auth">
-      <h1>Login</h1>
-      <form>
-        <input
-          required
-          type="text"
-          placeholder="username"
-          name="username"
-          onChange={handleChange}
-        />
-        <input
-          required
-          type="password"
-          placeholder="password"
-          name="password"
-          onChange={handleChange}
-        />
-        <button onClick={handleSubmit}>Login</button>
-        {err && <p>{console.log(err.message)}</p>}
-        {/* if (err) {
-          console.log(err.message);
-        } */}
-        <span>
-          Don't you have an account? <Link to="/register">Register</Link>
-        </span>
-      </form>
+      <div className={`wrapper`}>
+        <div className={`form-container sign-in`}>
+          <form>
+            <h2>Login</h2>
+            <div className="form-group">
+              <input type="text" name = "username" onChange = {handleChange} required/>
+              <label htmlFor="">Username</label>
+            </div>
+            <div className="form-group">
+              <input type="password" name = "password" onChange = {handleChange}  required/>
+              <label htmlFor="">Password</label>
+            </div>
+            <button className = "btn" onClick={handleSubmit}>Login</button>
+            {err && <p>{console.log(err.message)}</p>}
+            {/* if (err) {
+              console.log(err.message);
+            } */}
+            <span className='link'>
+              Don't you have an account? <Link to="/register">Register</Link>
+            </span>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import Logo from "../img/logo.png";
+import Logo from "../img/logo2.png";
 
 const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -9,11 +9,12 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="container">
+      <Link to="/" style = {{textDecoration: "none"}}>
         <div className="logo">
-          <Link to="/">
           <img src={Logo} alt="" />
-          </Link>
+          <h2>Community Quill</h2>
         </div>
+        </Link>
         <div className="links">
           <Link className="link" to="/?cat=art">
             <h6>ART</h6>
@@ -38,7 +39,7 @@ const Navbar = () => {
             <span onClick={logout}>Logout</span>
           ) : (
             <Link className="link" to="/login">
-              Login
+              <span>Login</span>
             </Link>
           )}
           <span className="write">

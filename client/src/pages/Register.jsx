@@ -36,35 +36,30 @@ const Register = () => {
 
   return (
     <div className="auth">
-      <h1>Register</h1>
-      <form>
-        <input
-          required
-          type="text"
-          placeholder="username"
-          name="username"
-          onChange={handleChange}
-        />
-        <input
-          required
-          type="email"
-          placeholder="email"
-          name="email"
-          onChange={handleChange}
-        />
-        <input
-          required
-          type="password"
-          placeholder="password"
-          name="password"
-          onChange={handleChange}
-        />
-        <button onClick={handleSubmit}>Register</button>
-        {err && err.message && <p>Error: {err.message}</p>}
-        <span>
-          Do you have an account? <Link to="/login">Login</Link>
-        </span>
-      </form>
+      <div className={`wrapper`}>
+        <div className={`form-container sign-up `}>
+            <form>
+              <h2>Register</h2>
+              <div className="form-group">
+                <input type="text" name = "username" onChange={handleChange} required/>
+                <label htmlFor="">Username</label>
+              </div>
+              <div className="form-group">
+                <input type="text" name = "email" onChange={handleChange} required/>
+                <label htmlFor="">Email</label>
+              </div>
+              <div className="form-group">
+                <input type="password" name = "password" onChange={handleChange} required/>
+                <label htmlFor="">Password</label>
+              </div>
+              <button type = "submit" onClick = {handleSubmit} className = "btn">
+                Register
+              </button>
+              {err && <p>{err}</p>}
+              <span className='link' >Already have an account?<Link to ="/Login"> Login</Link></span>
+            </form>
+          </div>
+        </div>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const Likes = ({ postId }) => {
     };
 
     fetchLikesCount();
-  }, []);
+  }, [postId]);
 
   useEffect(() => {
     // Check if the current user has liked the post
@@ -51,7 +51,7 @@ const Likes = ({ postId }) => {
     };
 
     fetchLikedStatus();
-  }, []);
+  }, [postId]);
 
   const handleLike = async () => {
     try {
@@ -90,7 +90,7 @@ const Likes = ({ postId }) => {
   };
 
   return (
-    <div className="likes">
+    <div className="likes" style={{display:"flex",gap:"5px"}}>
       <button style={{ backgroundColor: "white", border: "white" }}onClick={liked ? handleUnlike : handleLike}>
       <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} style={{ backgroundColor: "white", border: "white" }} />
       </button>

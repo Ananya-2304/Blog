@@ -3,13 +3,17 @@ import Edit from "../img/edit.png";
 import Delete from "../img/delete.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
+import Comments from "../components/Comments.jsx"; 
 import moment from "moment";
 import { AuthContext } from "../context/authContext";
 import DOMPurify from "dompurify";
-import Comments from "../components/Comments.jsx"; 
 import Likes from "../components/Likes.jsx"; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComments } from '@fortawesome/free-solid-svg-icons';
+
 const Single = () => {
   const [post, setPost] = useState({});
+  const [showComments, setShowComments] = useState(false); // State to manage comments visibility
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,6 +56,10 @@ const Single = () => {
     return doc.body.textContent;
   };
 
+  const handleCommentsClick = () => {
+    setShowComments(!showComments); // Toggle comments visibility
+  };
+
   return (
     <div className="single">
       <div className="content">
@@ -67,9 +75,9 @@ const Single = () => {
           {currentUser && currentUser.username === post.username && (
             <div className="edit">
               <Link to={`/write?edit=${postId}`} state={post}>
-                <img src={Edit} alt="" />
+                <img src={Edit} alt="" style= {{width:"25px",height:"25px"}} />
               </Link>
-              <img onClick={handleDelete} src={Delete} alt="" />
+              <img onClick={handleDelete} style= {{width:"25px",height:"25px"}} src={Delete} alt="" />
             </div>
           )}
         </div>
@@ -79,11 +87,16 @@ const Single = () => {
             __html: DOMPurify.sanitize(post.desc),
           }}
         ></p>
-        <Likes postId = {postId} />
-        <Comments postId={postId} />
+        <div className ="lc">
+          <Likes postId = {postId}/>
+          <FontAwesomeIcon icon={faComments} onClick={handleCommentsClick} style={{ cursor: "pointer" }} />
+        </div>
+        {/* Render Comments only when showComments is true */}
+        {showComments && <Comments postId={postId} />}
       </div>
       <Menu cat={post.category} postId={postId} />
-
+      
+      {/* FontAwesomeIcon for comments */}
     </div>
   );
 };

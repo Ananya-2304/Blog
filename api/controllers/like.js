@@ -7,6 +7,7 @@ export const getLikes = (req,res)=>{
     db.query(q,req.query.postId, (err, data) => {
       if (err) return res.status(500).json(err);
       const liked = data[0].liked;
+      console.log(liked);
       return res.status(200).json({liked});
     });
 }
