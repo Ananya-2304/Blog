@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 export const register = (req, res) => {
   //CHECK EXISTING USER
   const q = "SELECT * FROM user_info WHERE email = ? OR username = ?";
-  console.log("pleae");
   db.query(q, [req.body.email, req.body.username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already exists!");
@@ -27,12 +26,8 @@ export const register = (req, res) => {
 
 export const login = (req, res) => {
   //CHECK USER
-  console.log("hi");
   const q = "SELECT * FROM user_info WHERE username = ?";
-  console.log("hisf");
   db.query(q, [req.body.username], (err, data) => {
-    console.log(req.body.username);
-    console.log(data);
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("User not found!");
     //Check password
@@ -46,7 +41,6 @@ export const login = (req, res) => {
 
     const token = jwt.sign({ id: data[0].id }, "jwtkey");
     const { password, ...other } = data[0];
-    console.log(token);
     // Set the access_token cookie using cookie-parser
     const cookieOptions = {
       httpOnly: true,

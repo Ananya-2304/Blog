@@ -44,8 +44,4 @@ const transporter = nodemailer.createTransport({
     });
   }
   
-  // Call checkEmailQueue function every minute (adjust interval as needed)
-//   setInterval(checkEmailQueue, 60000);
-//   console.log("meow");
-//   // Start the email checking process
-//   checkEmailQueue();
+ 

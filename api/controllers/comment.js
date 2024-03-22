@@ -17,11 +17,9 @@ function checkEmailQueue() {
       console.error('Error fetching email queue:', error);
       return;
     }
-    console.log(results);
     // Process each row in the email_queue table
     results.forEach(row => {
       const { id, writer_email, blog_title, email_message } = row;
-      console.log(writer_email);
       // Send email using nodemailer
       transporter.sendMail({
         from: 'ananyabhat23@gmail.com',
@@ -61,7 +59,6 @@ export const getComments = (req, res) => {
 };
 
 export const addComment = (req, res) => {
-  console.log("popfx");
   const cookieHeader = req.headers.cookie;
   const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
     const [name, value] = cookie.split("=");
@@ -72,9 +69,7 @@ export const addComment = (req, res) => {
   if (!token) return res.status(401).json("Not logged in!");
   const decodedToken = jwt.decode(token);
   const userId = decodedToken.id;
-  console.log(userId);
   jwt.verify(token, "jwtkey", (err, userInfo) => {
-    console.log(userInfo);
     if (err) return res.status(403).json("Token is not valid!");
 
     const q = `

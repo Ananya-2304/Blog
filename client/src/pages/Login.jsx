@@ -22,10 +22,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(inputs);
       await login(inputs)
-      console.log("fds")
-      console.log(inputs)
       navigate("/");
     } catch (err) {
       setError(err.response.data);
@@ -47,9 +44,7 @@ const Login = () => {
             </div>
             <button className = "btn" onClick={handleSubmit}>Login</button>
             {err && <p>{console.log(err.message)}</p>}
-            {/* if (err) {
-              console.log(err.message);
-            } */}
+            
             <span className='link'>
               Don't you have an account? <Link to="/register">Register</Link>
             </span>

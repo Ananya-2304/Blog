@@ -7,7 +7,6 @@ export const getLikes = (req,res)=>{
     db.query(q,req.query.postId, (err, data) => {
       if (err) return res.status(500).json(err);
       const liked = data[0].liked;
-      console.log(liked);
       return res.status(200).json({liked});
     });
 }
@@ -23,7 +22,6 @@ export const getLikedStatus = (req, res) => {
 
   jwt.verify(token, "jwtkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
-    console.log(userInfo.id +" "+req.query.postId)
     const q = "SELECT COUNT(*) AS liked FROM likes WHERE `userId` = ? AND `postId` = ?";
     const values = [userInfo.id, req.query.postId];
 

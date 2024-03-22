@@ -17,7 +17,7 @@ export const getPosts = (req, res) => {
     q += ` AND p.id != ?`;
     queryParams.push(postId);
   }
-
+  q += ` ORDER BY p.date DESC`;
   db.query(q, queryParams, (err, data) => {
     if (err) return res.status(500).send(err);
 
@@ -36,7 +36,6 @@ export const getPost = (req, res) => {
 
   db.query(q, [req.params.id], (err, data) => {
     if (err) return res.status(500).json(err);
-    console.log(data);
     return res.status(200).json(data[0]);
   });
 };
