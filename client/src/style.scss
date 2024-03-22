@@ -486,18 +486,32 @@ html {
     }
 
     //WRITE
-
+  .write{
+    .err{
+      text-align: center;
+      font-size: 1.4rem;
+      color: #a344da;
+      // margin: 2.5rem 0;
+      gap:5px;
+      //display:inline-block;
+      .cross{
+        border:none;
+        background-color: #ffffff;
+        cursor: pointer;
+        //display:inline-block;
+      }
+    }
+  
     .add {
       margin: 20px 100px 20px 100px;
       display: flex;
       gap: 20px;
-
       .content {
         flex: 5;
         display: flex;
         flex-direction: column;
         gap: 20px;
-
+        
         input {
           padding: 10px;
           border: 1px solid lightgray;
@@ -572,5 +586,6 @@ html {
         }
       }
     }
+  }
   }
 }

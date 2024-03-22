@@ -24,15 +24,21 @@ const Register = () => {
         },
         body: JSON.stringify(inputs),
       });
-      if (!response.ok) {
+      const data = await response.json();
+    if (!response.ok) {
+      if (data === "User already exists!") {
+        setError({ message: "User already exists!" });
+      } else {
         throw new Error("Registration failed");
       }
+    } else {
       navigate("/login");
-    } catch (error) {
-      console.error(error);
-      setError({ message: "Registration failed. Please try again." });
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setError({ message: "Registration failed. Please try again." });
+  }
+};
 
   return (
     <div className="auth">
@@ -55,7 +61,7 @@ const Register = () => {
               <button type = "submit" onClick = {handleSubmit} className = "btn">
                 Register
               </button>
-              {err && <p>{err}</p>}
+              {err && <p>{err.message}</p>}
               <span className='link' >Already have an account?<Link to ="/Login"> Login</Link></span>
             </form>
           </div>

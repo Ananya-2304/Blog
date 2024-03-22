@@ -56,37 +56,63 @@ export const addPost = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const { title, desc, img, date, cat } = req.body;
-
-    // Retrieve category ID based on category name
-    const catQuery = `SELECT cid FROM category WHERE name = ?`;
-    db.query(catQuery, [cat], (catErr, catResult) => {
-      if (catErr) return res.status(500).json(catErr);
-      if (catResult.length === 0) {
-        return res.status(404).json("Category not found");
+    // Check if a post with both the same title and content exists
+    const checkBothQuery = `SELECT * FROM posts WHERE title = ? AND \`desc\` = ?`;
+    db.query(checkBothQuery, [title, desc], (checkBothErr, checkBothResult) => {
+      if (checkBothErr) return res.status(500).json(checkBothErr);
+      if (checkBothResult.length > 0) {
+        return res.status(409).json("Post with the same title and content already exists.");
+      }
+    // Check if a post with the same title exists
+    const checkTitleQuery = `SELECT * FROM posts WHERE title = ?`;
+    db.query(checkTitleQuery, [title], (checkTitleErr, checkTitleResult) => {
+      if (checkTitleErr) return res.status(500).json(checkTitleErr);
+      if (checkTitleResult.length > 0) {
+        return res.status(409).json("Post with the same title already exists.");
       }
 
-      const categoryId = catResult[0].cid;
+      // Check if a post with the same content exists
+      const checkContentQuery = `SELECT * FROM posts WHERE \`desc\` = ?`;
+      db.query(checkContentQuery, [desc], (checkContentErr, checkContentResult) => {
+        if (checkContentErr) return res.status(500).json(checkContentErr);
+        if (checkContentResult.length > 0) {
+          return res.status(409).json("Post with the same content already exists.");
+        }
 
-      // Insert post into posts table
-      const postQuery = `INSERT INTO posts(title, \`desc\`, img, date, user_id) VALUES (?, ?, ?, ?, ?)`;
-      const postValues = [title, desc, img, date, userInfo.id];
+          // Retrieve category ID based on category name
+          const catQuery = `SELECT cid FROM category WHERE name = ?`;
+          db.query(catQuery, [cat], (catErr, catResult) => {
+            if (catErr) return res.status(500).json(catErr);
+            if (catResult.length === 0) {
+              return res.status(404).json("Category not found");
+            }
 
-      db.query(postQuery, postValues, (postErr, postResult) => {
-        if (postErr) return res.status(500).json(postErr);
+            const categoryId = catResult[0].cid;
 
-        const postId = postResult.insertId;
+            // Insert post into posts table
+            const postQuery = `INSERT INTO posts(title, \`desc\`, img, date, user_id) VALUES (?, ?, ?, ?, ?)`;
+            const postValues = [title, desc, img, date, userInfo.id];
 
-        // Insert into post_category table
-        const postCatQuery = `INSERT INTO post_category(post_id, cat_id) VALUES (?, ?)`;
-        db.query(postCatQuery, [postId, categoryId], (pcErr, pcResult) => {
-          if (pcErr) return res.status(500).json(pcErr);
+            db.query(postQuery, postValues, (postErr, postResult) => {
+              if (postErr) return res.status(500).json(postErr);
 
-          return res.json("Post has been created.");
+              const postId = postResult.insertId;
+
+              // Insert into post_category table
+              const postCatQuery = `INSERT INTO post_category(post_id, cat_id) VALUES (?, ?)`;
+              db.query(postCatQuery, [postId, categoryId], (pcErr, pcResult) => {
+                if (pcErr) return res.status(500).json(pcErr);
+
+                return res.json("Post has been created.");
+              });
+            });
+          });
         });
       });
     });
   });
 };
+
 
 
 export const deletePost = (req, res) => {
@@ -103,26 +129,27 @@ export const deletePost = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const postId = req.params.id;
-    const q = "DELETE FROM posts WHERE id = ? AND user_id = ?";
 
-    db.query(q, [postId, userInfo.id], (err, result) => {
-      console.log(postId + userInfo.id);
-      if (err) return res.status(500).json(err);
+    // Delete post-category relationships first
+    const delCatQuery = "DELETE FROM post_category WHERE post_id = ?";
+    db.query(delCatQuery, [postId], (delCatErr, delCatResult) => {
+      if (delCatErr) return res.status(500).json(delCatErr);
 
-      if (result.affectedRows === 0) {
-        return res.status(403).json("You can delete only your post!");
-      }
+      // If deletion from post_category is successful, proceed to delete post
+      const delPostQuery = "DELETE FROM posts WHERE id = ? AND user_id = ?";
+      db.query(delPostQuery, [postId, userInfo.id], (err, result) => {
+        if (err) return res.status(500).json(err);
 
-      // Also delete post-category relationships
-      const delCatQuery = "DELETE FROM post_category WHERE post_id = ?";
-      db.query(delCatQuery, [postId], (delCatErr, delCatResult) => {
-        if (delCatErr) return res.status(500).json(delCatErr);
+        if (result.affectedRows === 0) {
+          return res.status(403).json("You can delete only your post!");
+        }
 
         return res.json("Post has been deleted!");
       });
     });
   });
 };
+
 
 export const updatePost = (req, res) => {
   const token = req.cookies.access_token;

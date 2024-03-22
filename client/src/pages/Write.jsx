@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
 const Write = () => {
@@ -10,6 +11,8 @@ const Write = () => {
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.category || "");
+  const [error, setError] = useState(null);  
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const upload = async () => {
     try {
@@ -52,18 +55,32 @@ const Write = () => {
         credentials: 'include'
       });
       if (!response.ok) {
-        throw new Error("Failed to publish post");
+        const errorMessage = await response.json();
+        setError(errorMessage);
+        setShowNotification(true);
+        e.preventDefault();
       }
-      console.log("meow");
-      navigate("/");
+      else
+        navigate("/");
     } catch (err) {
       console.log(err);
+      setError(err.message); 
     }
   };
 
   return (
+    <div className = "write">
+      {showNotification && (
+        <div className="err" style = {{display : "flex",flexDirection:"row",justifyContent:"center"}}>
+          <p>{error}</p>
+          <FontAwesomeIcon className = "cross" icon={faCircleXmark} onClick={() => setShowNotification(false)}/>
+          {/* <button onClick={() => setShowNotification(false)}>X</button> */}
+        </div>
+      )}
     <div className="add">
+        {/* {error && <p className = "err">{error}</p>}  */}
        <div className="content">
+       
         <input
           type="text"
           placeholder="Title"
@@ -219,6 +236,7 @@ const Write = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
