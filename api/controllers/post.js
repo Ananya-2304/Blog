@@ -170,13 +170,21 @@ export const updatePost = (req, res) => {
       if (updateResult.affectedRows === 0) {
         return res.status(403).json("You can update only your post!");
       }
+      const catQuery = `SELECT cid FROM category WHERE name = ?`;
+      db.query(catQuery, [cat], (catErr, catResult) => {
+        if (catErr) return res.status(500).json(catErr);
+        if (catResult.length === 0) {
+          return res.status(404).json("Category not found");
+        }
 
-      // Update post-category relationship
-      const updateCatQuery = "UPDATE post_category SET cat_id = ? WHERE post_id = ?";
-      db.query(updateCatQuery, [cat, postId], (updateCatErr, updateCatResult) => {
-        if (updateCatErr) return res.status(500).json(updateCatErr);
+        const categoryId = catResult[0].cid;
+        // Update post-category relationship
+        const updateCatQuery = "UPDATE post_category SET cat_id = ? WHERE post_id = ?";
+        db.query(updateCatQuery, [categoryId, postId], (updateCatErr, updateCatResult) => {
+          if (updateCatErr) return res.status(500).json(updateCatErr);
 
-        return res.json("Post has been updated.");
+          return res.json("Post has been updated.");
+        });
       });
     });
   });

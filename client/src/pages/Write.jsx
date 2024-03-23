@@ -34,6 +34,29 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    if (!title.trim()) {
+      setError("Title not entered");
+      setShowNotification(true);
+      return;
+    }
+    
+    if (!value.trim()) {
+      setError("Content not entered");
+      setShowNotification(true);
+      return;
+    }
+    
+    if (!file) {
+      setError("Image not uploaded");
+      setShowNotification(true);
+      return;
+    }
+  
+    if (!cat) {
+      setError("Category not selected");
+      setShowNotification(true);
+      return;
+    }
     const imgUrl = await upload();
 
     try {
@@ -100,117 +123,138 @@ const Write = () => {
         <div className="item">
           <h1>Category</h1>
           <div className="cat">
-          {state && (
-            <input
-              type="radio"
-              checked={cat === "ART"}
-              name="cat"
-              value="art"
-              id="art"
-              onChange={(e) => setCat(e.target.value)}
-            />
-          )}
-          {!state && (
-            <input
-              type="radio"
-              name="cat"
-              value="art"
-              id="art"
-              onChange={(e) => setCat(e.target.value)}
-            />
-          )}
-          <label htmlFor="art">Art</label>
-        </div>
-        <div className="cat">
-          {state && (<input
-            type="radio"
-            checked={cat === "SCIENCE"}
-            name="cat"
-            value="science"
-            id="science"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          {!state && (<input
-            type="radio"
-            name="cat"
-            value="science"
-            id="science"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          <label htmlFor="science">Science</label>
-        </div>
-        <div className="cat">
-          {state && (<input
-            type="radio"
-            checked={cat === "TECHNOLOGY"}
-            name="cat"
-            value="technology"
-            id="technology"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          {!state && (<input
-            type="radio"
-            name="cat"
-            value="technology"
-            id="technology"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          <label htmlFor="technology">Technology</label>
-        </div>
-        <div className="cat">
-          {state && (<input
-            type="radio"
-            checked={cat === "CINEMA"}
-            name="cat"
-            value="cinema"
-            id="cinema"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          {!state && (<input
-            type="radio"
-            name="cat"
-            value="cinema"
-            id="cinema"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          <label htmlFor="cinema">Cinema</label>
-        </div>
-        <div className="cat">
-          {state && (<input
-            type="radio"
-            checked={cat === "DESIGN"}
-            name="cat"
-            value="design"
-            id="design"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          {!state && (<input
-            type="radio"
-            name="cat"
-            value="design"
-            id="design"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          <label htmlFor="design">Design</label>
-        </div>
-        <div className="cat">
-          {state && (<input
-            type="radio"
-            checked={cat === "FOOD"}
-            name="cat"
-            value="food"
-            id="food"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
-          {!state && (<input
-            type="radio"
-            name="cat"
-            value="food"
-            id="food"
-            onChange={(e) => setCat(e.target.value)}
-          />)}
+            {state && cat === "ART" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="art"
+                id="art"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "ART")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="art"
+                id="art"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            <label htmlFor="art">Art</label>
+          </div>
+          <div className="cat">
+            {state && cat === "SCIENCE" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="science"
+                id="science"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "SCIENCE")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="science"
+                id="science"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            <label htmlFor="science">Science</label>
+          </div>
+          <div className="cat">
+            {state && cat === "TECHNOLOGY" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="technology"
+                id="technology"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "TECHNOLOGY")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="technology"
+                id="technology"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            <label htmlFor="technology">Technology</label>
+          </div>
+          <div className="cat">
+            {state && cat === "CINEMA" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="cinema"
+                id="cinema"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "CINEMA")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="cinema"
+                id="cinema"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            <label htmlFor="cinema">Cinema</label>
+          </div>
+          <div className="cat">
+            {state && cat === "DESIGN" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="design"
+                id="design"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "DESIGN")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="design"
+                id="design"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            <label htmlFor="design">Design</label>
+          </div>
+          <div className="cat">
+            {state && cat === "FOOD" && (
+              <input
+                type="radio"
+                checked
+                name="cat"
+                value="food"
+                id="food"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
+            {(!state || (state && cat !== "FOOD")) && (
+              <input
+                type="radio"
+                name="cat"
+                value="food"
+                id="food"
+                onChange={(e) => setCat(e.target.value)}
+              />
+            )}
             <label htmlFor="food">Food</label>
           </div>
+
         </div>
         <div className="item">
           <h1>Publish</h1>
