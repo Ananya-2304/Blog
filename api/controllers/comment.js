@@ -7,8 +7,8 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'ananyabhat23@gmail.com',
-        pass: 'rjtdmgeggondfxdr'
+        user: 'example@gmail.com',
+        pass: 'password'
     }
 });
 function checkEmailQueue() {
